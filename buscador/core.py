@@ -4,12 +4,27 @@ core — utilidades de texto y HTTP compartidas por todas las fuentes.
 
 from __future__ import annotations
 
+import socket
 import unicodedata
-
 import requests
+import urllib3.util.connection as urllib3_cn
 
+# --------------------------------------------------------------------------
+# PARCHE DE RED: Forzar IPv4
+# --------------------------------------------------------------------------
+# Muchos servidores de hosting en la nube (como Render) intentan conectarse por IPv6
+# por defecto si el dominio destino lo soporta. Si la ruta externa IPv6 no está
+# configurada en el contenedor, se produce un error 'Network is unreachable (Errno 101)'.
+# Forzamos la resolución DNS a IPv4 (AF_INET) para evitarlo.
+def allowed_gai_family():
+    return socket.AF_INET
+
+urllib3_cn.allowed_gai_family = allowed_gai_family
+
+
+# User-Agent estándar y realista para evitar bloqueos por firmas de scraping sospechosas
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36")
+      "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36")
 TIMEOUT = 30
 
 

@@ -43,11 +43,15 @@
       <details class="token">
         <summary>Incluir «Desaparecidos Terremoto Venezuela» (~46k, requiere token)</summary>
         <textarea id="dtv" rows="2" placeholder="Pega aquí el token reCAPTCHA…"></textarea>
+        <div style="margin: 0.4rem 0; display: flex; align-items: center; gap: 0.6rem;">
+          <button type="button" id="probar-token" class="mini">Probar Token</button>
+          <span id="dtv-status" style="font-size: .8rem; font-weight: bold;"></span>
+        </div>
         <p class="ayuda">
           Esa fuente exige un token que dura ~2 min. Abre
           <a href="https://desaparecidosterremotovenezuela.com/" target="_blank" rel="noopener">el sitio</a>,
           consola (F12) y pega:
-          <code id="snippet">await new Promise((ok) =&gt; grecaptcha.ready(ok)); await grecaptcha.execute('6LeBfDUtAAAAAMw1Wtkd58bst6vEnLOi3_NAjGD0',{action:'submit'})</code>
+          <code id="snippet">await new Promise((ok) =&gt; grecaptcha.ready(ok)); await grecaptcha.execute('6LeBfDUtAAAAAMw1Wtkd58bst6vEnLOi3_NAjGD0',{action:'list_people'})</code>
           <button type="button" id="copiar" class="mini">copiar</button>
         </p>
       </details>

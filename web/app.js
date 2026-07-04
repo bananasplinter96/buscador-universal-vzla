@@ -224,6 +224,56 @@ $("#copiar").addEventListener("click", () => {
   }, 1500);
 });
 
+// Lógica para el botón de prueba de token en tiempo real
+$("#probar-token").addEventListener("click", () => {
+  const token = dtv.value.trim();
+  const statusEl = $("#dtv-status");
+
+  if (!token) {
+    statusEl.textContent = "⚠️ Pega un token primero.";
+    statusEl.style.color = "var(--amarillo)";
+    return;
+  }
+
+  statusEl.textContent = "⏳ Validando token con la API externa...";
+  statusEl.style.color = "var(--muted)";
+
+  // Hacemos una consulta rápida de prueba usando tu propio flujo SSE para saltar el CORS
+  const params = new URLSearchParams({
+    q: "jose",
+    fuentes: "desaparecidos_terremoto",
+    dtv_token: token
+  });
+
+  const testEvt = new EventSource("/api/buscar?" + params.toString());
+
+  testEvt.onmessage = (m) => {
+    const ev = JSON.parse(m.data);
+
+    if (ev.fin) {
+      testEvt.close();
+      return;
+    }
+
+    if (ev.fuente === "desaparecidos_terremoto") {
+      testEvt.close();
+      if (ev.error) {
+        statusEl.textContent = "❌ Rechazado: " + ev.error;
+        statusEl.style.color = "var(--err)";
+      } else {
+        statusEl.textContent = "✅ ¡Token válido! Funciona correctamente.";
+        statusEl.style.color = "var(--ok)";
+      }
+    }
+  };
+
+  testEvt.onerror = () => {
+    testEvt.close();
+    statusEl.textContent = "❌ Error de comunicación con tu backend.";
+    statusEl.style.color = "var(--err)";
+  };
+});
+
 cargarFuentes().catch(() => {
   estado.textContent = "No se pudo cargar el catalogo de fuentes.";
 });

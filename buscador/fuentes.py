@@ -155,12 +155,11 @@ def desaparecidos_terremoto(query, qn, ctx):
     El token se pasa en ctx['dtv_token'] (ver README, sección reCAPTCHA)."""
     token = (ctx or {}).get("dtv_token")
     if not token:
-        raise RuntimeError(
-            "requiere token reCAPTCHA (ver README). Se omite; "
-            "hazlohoy ya agrega esta fuente indirectamente.")
+        return []  # Retorna vacío silenciosamente si el usuario no ha puesto un token al buscar
     r = http_get("https://desaparecidos-terremoto-api.theempire.tech/api/personas",
                  params={"page": 1, "pageSize": 50, "q": query},
                  headers={"x-recaptcha-token": token,
+                          "content-type": "application/json",
                           "origin": "https://desaparecidosterremotovenezuela.com",
                           "referer": "https://desaparecidosterremotovenezuela.com/",
                           "accept": "*/*"})
@@ -180,7 +179,12 @@ def desaparecidos_terremoto(query, qn, ctx):
 
 @registrar("sosven", "SOS Venezuela", "~7k · dump completo", GRUPO_DUMP, sitio="https://sosven.site/")
 def sosven(query, qn, ctx):
-    r = http_get("https://sosven.site/api.php?action=listar")
+    # Cabeceras requeridas para evitar el error 415 (Unsupported Media Type) en sosven.site
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Content-Type": "application/json"
+    }
+    r = http_get("https://sosven.site/api.php?action=listar", headers=headers)
     r.raise_for_status()
     ced = cedula_num(query) if es_cedula(query) else None
     out = []
