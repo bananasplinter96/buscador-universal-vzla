@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscador Universal · Terremoto Venezuela 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- pantalla inicial centrada, estilo buscador -->
+  <main id="app">
+    <div class="hero" id="hero">
+      <h1>Buscador Universal</h1>
+      <p class="sub" id="hero-copy">Busca a una persona en 14 fuentes del terremoto de Venezuela 2026, a la vez.</p>
+
+      <form id="form" autocomplete="off">
+        <div class="caja">
+          <svg class="lupa" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/>
+          </svg>
+          <input id="q" name="q" type="text" placeholder="Nombre y apellido o cédula" required>
+        </div>
+        <div class="botones">
+          <button id="btn" type="submit">Buscar en todas</button>
+          <button type="button" id="toggle-fuentes" class="ghost">Elegir fuentes</button>
+        </div>
+      </form>
+
+      <p class="cuenta"><span id="n-fuentes">…</span> plataformas conectadas ·
+        <a href="#" id="ver-fuentes">ver todas</a></p>
+    </div>
+
+    <!-- panel de fuentes (oculto por defecto) -->
+    <section id="panel-fuentes" class="panel oculto">
+      <div class="panel-cab">
+        <h2>Fuentes a consultar</h2>
+        <div class="mini-acciones">
+          <a href="#" data-all="1">Todas</a> · <a href="#" data-all="0">Ninguna</a>
+        </div>
+      </div>
+      <div id="fuentes" class="grid-fuentes"></div>
+
+      <details class="token">
+        <summary>Incluir «Desaparecidos Terremoto Venezuela» (~46k, requiere token)</summary>
+        <textarea id="dtv" rows="2" placeholder="Pega aquí el token reCAPTCHA…"></textarea>
+        <p class="ayuda">
+          Esa fuente exige un token que dura ~2 min. Abre
+          <a href="https://desaparecidosterremotovenezuela.com/" target="_blank" rel="noopener">el sitio</a>,
+          consola (F12) y pega:
+          <code id="snippet">await new Promise((ok) =&gt; grecaptcha.ready(ok)); await grecaptcha.execute('6LeBfDUtAAAAAMw1Wtkd58bst6vEnLOi3_NAjGD0',{action:'submit'})</code>
+          <button type="button" id="copiar" class="mini">copiar</button>
+        </p>
+      </details>
+    </section>
+
+    <!-- estado + resultados -->
+    <div id="estado" class="estado"></div>
+    <div id="resultados"></div>
+
+    <!-- catálogo de fuentes indexadas (siempre disponible, plegado) -->
+    <details id="catalogo" class="catalogo">
+      <summary>Fuentes indexadas y sus sitios web</summary>
+      <div class="cat-cols">
+        <div>
+          <h3>Consultadas en vivo</h3>
+          <ul id="cat-directas"></ul>
+        </div>
+        <div>
+          <h3>Indexadas vía agregadores</h3>
+          <ul id="cat-indirectas"></ul>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    Solo lectura · no modifica ninguna fuente ni base de datos ·
+    la información es ciudadana y no está verificada, confírmala antes de actuar.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
